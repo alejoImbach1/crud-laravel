@@ -8,55 +8,44 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/0062b0aa7f.js" crossorigin="anonymous"></script>
 
-    <title>Document</title>
+    <title>Crud en laravel</title>
 </head>
 
-<body>
-    <h1 class="text-center p-3">Hello :3</h1>
-    @if (session('correcto'))
-        <div class="alert alert-success">{{ session('correcto') }}</div>
+<body class="d-flex flex-column align-items-center">
+    <h1>CRUD CON ITEMS</h1>
+    @if (session('alert'))
+        <div class="alert alert-{{ session('alert')[1] }} w-75">{{ session('alert')[0] }}</div>
     @endif
 
-    @if (session('incorrecto'))
-        <div class="alert alert-danger">{{ session('incorrecto') }}</div>
-    @endif
-
-    <script>
-        function confirmar() {
-            return confirm("¿Estás seguro de que quieres eliminar?");
-        }
-    </script>
-    <div class="p-4 table-responsive">
+    <div class="w-75 p-4 table-responsive">
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>id_producto</th>
-                    <th>nombre</th>
-                    <th>precio</th>
-                    <th>cantidad</th>
-                    <th></th>
+                    <th class="bg-info-subtle text-center">ID</th>
+                    <th class="bg-info-subtle text-center">Descripción</th>
+                    <th class="bg-info-subtle text-center">Fecha</th>
+                    <th class="bg-info-subtle text-center">Opciones</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
                 @foreach ($datos as $item)
                     <tr>
-                        <th>{{ $item->id_producto }}</th>
-                        <td>{{ $item->nombre }}</td>
-                        <td>{{ $item->precio }}</td>
-                        <td>{{ $item->cantidad }}</td>
-                        <td>
-                            <a href="" class="btn btn-info" data-bs-toggle="modal"
-                                data-bs-target="#modalEditar{{ $item->id_producto }}">
+                        <th>{{ $item->id_item }}</th>
+                        <td>{{ $item->descripcion }}</td>
+                        <td>{{ $item->fecha }}</td>
+                        {{-- opciones --}}
+                        <td class="d-flex justify-content-around">
+                            <a href="" class="btn btn-warning" data-bs-toggle="modal"
+                                data-bs-target="#modalEditar{{ $item->id_item }}">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
-                            <a href="{{ route('crud.delete', $item->id_producto) }}" onclick="confirmar()"
-                                class="btn btn-danger">
+                            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmar{{ $item->id_item }}">
                                 <i class="fa-solid fa-trash-can"></i>
                             </a>
                         </td>
 
-                        <!-- Modal de modifical datos-->
-                        <div class="modal fade" id="modalEditar{{ $item->id_producto }}" tabindex="-1"
+                        <!-- Modal de modificar datos-->
+                        <div class="modal fade" id="modalEditar{{ $item->id_item }}" tabindex="-1"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -70,32 +59,22 @@
                                         <form action="{{ route('crud.update') }}" method="POST">
                                             @csrf
                                             <div class="mb-3">
-                                                <label for="inputCodigo" class="form-label">Código</label>
-                                                <input type="number" min="1" class="form-control"
-                                                    id="inputCodigo" value="{{ $item->id_producto }}" name="txtcodigo"
+                                                <label for="inputCodigo" class="form-label">ID</label>
+                                                <input type="number" min="1" class="form-control text-bg-secondary"
+                                                    id="inputCodigo" value="{{ $item->id_item }}" name="txtid"
                                                     readonly>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="inputNombre" class="form-label">Nombre</label>
+                                                <label for="inputNombre" class="form-label">Descripción</label>
                                                 <input type="text" class="form-control" id="inputNombre"
-                                                    value="{{ $item->nombre }}" name="txtnombre">
+                                                    value="{{ $item->descripcion }}" name="txtdescripcion">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="inputPrecio" class="form-label">Precio</label>
-                                                <input type="number" class="form-control" id="inputPrecio"
-                                                    min="0" step="0.1" value="{{ $item->precio }}"
-                                                    name="txtprecio">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="inputCantidad" class="form-label">Cantidad</label>
-                                                <input type="number" min="0" class="form-control"
-                                                    id="inputCantidad" value="{{ $item->cantidad }}"
-                                                    name="txtcantidad">
+                                                <label for="inputPrecio" class="form-label">Fecha</label>
+                                                <input type="date" class="form-control" id="inputPrecio" value="{{ $item->fecha }}"
+                                                    name="txtfecha">
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Cerrar
-                                                </button>
                                                 <button type="submit" class="btn btn-primary">Guardar</button>
                                             </div>
                                         </form>
@@ -106,29 +85,24 @@
 
                         {{-- alerta de confirmación --}}
                         <div>
-                            <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
-                                Launch demo modal
-                            </button>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            <!-- Modal de eliminación -->
+                            <div class="modal fade" id="modalConfirmar{{ $item->id_item }}" tabindex="-1" aria-labelledby="exampleModalLabel"
                                 aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">⁉️</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            ...
+                                            ¿Eliminar el item con ID: {{$item->id_item}}?
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                                data-bs-dismiss="modal">Cancelar
+                                            </button>
+                                            <a href="{{ route('crud.delete', $item->id_item) }}" class="btn btn-danger">Confirmar</a>
                                         </div>
                                     </div>
                                 </div>
@@ -138,7 +112,8 @@
                 @endforeach
             </tbody>
         </table>
-        <button class="btn btn-warning m-4" data-bs-toggle="modal" data-bs-target="#modalAgregar">
+        {{-- Botón de registro --}}
+        <button class="btn btn-info m-4" data-bs-toggle="modal" data-bs-target="#modalAgregar">
             <i class="fa-solid fa-plus"></i> Agregar
         </button>
 
@@ -148,7 +123,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar producto</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar item</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -156,27 +131,14 @@
                         <form action="{{ route('crud.create') }}" method="POST">
                             @csrf
                             <div class="mb-3">
-                                <label for="inputCodigo" class="form-label">Código</label>
-                                <input type="number" min="1" class="form-control" id="inputCodigo"
-                                    name="txtcodigo">
+                                <label for="inputDescripcion" class="form-label">Descripción</label>
+                                <input type="text" class="form-control" id="inputDescripcion" name="txtdescripcion">
                             </div>
                             <div class="mb-3">
-                                <label for="inputNombre" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="inputNombre" name="txtnombre">
-                            </div>
-                            <div class="mb-3">
-                                <label for="inputPrecio" class="form-label">Precio</label>
-                                <input type="number" class="form-control" id="inputPrecio" min="0"
-                                    step="0.1" name="txtprecio">
-                            </div>
-                            <div class="mb-3">
-                                <label for="inputCantidad" class="form-label">Cantidad</label>
-                                <input type="number" min="0" class="form-control" id="inputCantidad"
-                                    name="txtcantidad">
+                                <label for="inputFecha" class="form-label">Fecha</label>
+                                <input type="date" class="form-control" id="inputFecha" name="txtfecha">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Cerrar</button>
                                 <button type="submit" class="btn btn-primary">Agregar</button>
                             </div>
                         </form>

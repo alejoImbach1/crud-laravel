@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Psy\Readline\Hoa\Console;
 
 class CrudController extends Controller
 {
     public function index()
     {
-        $datos = DB::select("select * from producto");
+        $datos = DB::select("select * from items");
         return view("welcome")->with("datos", $datos);
     }
 
@@ -17,42 +18,39 @@ class CrudController extends Controller
     {
         try {
             $sql = DB::insert(
-                "insert into producto(id_producto,nombre,precio,cantidad) values(?,?,?,?)",
+                "insert into items(descripcion,fecha) values(?,?)",
                 [
-                    $request->txtcodigo,
-                    $request->txtnombre,
-                    $request->txtprecio,
-                    $request->txtcantidad
+                    $request->txtdescripcion,
+                    $request->txtfecha,
                 ]
             );
-            return back()->with("correcto", "Producto agregado con éxito");
+            return back()->with("alert", ["Se agregó el item con éxito",'success']);
         } catch (\Throwable $th) {
-            return back()->with("incorrecto", "¡Error al registrar!");
+            return back()->with("alert", "¡Error al registrar!");
         }
     }
 
     public function update(Request $request)
     {
         try {
-            $sql = DB::update("update producto set nombre=?, precio=?, cantidad=?
-            where id_producto=?", [
-                $request->txtnombre,
-                $request->txtprecio,
-                $request->txtcantidad,
-                $request->txtcodigo
+            $sql = DB::update("update items set descripcion=?, fecha=?
+            where id_item=?", [
+                $request->txtdescripcion,
+                $request->txtfecha,
+                $request->txtid
             ]);
-            return back()->with("correcto", "Se actualizó el producto con éxito");
+            return back()->with("alert", ["Se actualizó el item con éxito",'success']);
         } catch (\Throwable $th) {
-            return back()->with("incorrecto", "¡Error al actualizar!");
+            return back()->with("alert", ["¡Error al actualizar!",'danger']);
         }
     }
 
     public function delete($id) {
         try {
-            $sql = DB::delete("delete from producto where id_producto=$id");
-            return back()->with("correcto", "Se eliminó correctamente");
+            $sql = DB::delete("delete from items where id_item=$id");
+            return back()->with('alert', ["Se eliminó correctamente",'warning']);
         } catch (\Throwable $th) {
-            return back()->with("incorrecto", "¡Error al eliminar!");
+            return back()->with('alert', ["¡Error al eliminar!",'danger']);
         }
     }
 }

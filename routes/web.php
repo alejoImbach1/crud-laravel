@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CrudController;
+use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,13 +15,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get("/",[CrudController::class,"index"])->name("crud.index");
+// Route::get("/",[CrudController::class,"index"])->name("crud.index");
 
-//Agregar un producto
-Route::post("/agregar-producto",[CrudController::class,"create"])->name("crud.create");
+// //Agregar un producto
+// Route::post("agregar-item",[CrudController::class,"create"])->name("crud.create");
 
-//Actualizar un producto
-Route::post("/actualizar-producto",[CrudController::class,"update"])->name("crud.update");
+// //Actualizar un producto
+// Route::post("actualizar-item",[CrudController::class,"update"])->name("crud.update");
 
-//Ruta para eliminar producto
-Route::get("/eliminar-producto-{id}",[CrudController::class,"delete"])->name("crud.delete");
+// //Ruta para eliminar producto
+// Route::get("eliminar-item-{id}",[CrudController::class,"delete"])->name("crud.delete");
+
+Route::controller(CrudController::class)->group(function () {
+    Route::get('/','index')->name('crud.index');
+    Route::post('agregar-item','create')->name('crud.create');
+    Route::post('actualizar-item','update')->name('crud.update');
+    Route::get('eliminar-item-{id}','delete')->name('crud.delete');
+});
