@@ -14,8 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('items', function (Blueprint $table) {
-            $table->id('id_item');
+            $table->id('id');
+            $table->string('nombre',50);
             $table->text('descripcion');
+            $table->float('precio',10,2);
             $table->date('fecha')->nullable();
             $table->timestamps();
         });

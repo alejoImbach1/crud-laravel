@@ -29,6 +29,6 @@ use Illuminate\Support\Facades\Route;
 Route::controller(CrudController::class)->group(function () {
     Route::get('/','index')->name('crud.index');
     Route::post('agregar-item','create')->name('crud.create');
-    Route::post('actualizar-item','update')->name('crud.update');
+    Route::post('actualizar-item-{id}','update')->name('crud.update');
     Route::get('eliminar-item-{id}','delete')->name('crud.delete');
 });

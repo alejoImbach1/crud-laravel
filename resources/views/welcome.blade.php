@@ -22,7 +22,9 @@
             <thead>
                 <tr>
                     <th class="bg-info-subtle text-center">ID</th>
+                    <th class="bg-info-subtle text-center">Nombre</th>
                     <th class="bg-info-subtle text-center">Descripción</th>
+                    <th class="bg-info-subtle text-center">Precio</th>
                     <th class="bg-info-subtle text-center">Fecha</th>
                     <th class="bg-info-subtle text-center">Opciones</th>
                 </tr>
@@ -30,22 +32,24 @@
             <tbody class="table-group-divider">
                 @foreach ($datos as $item)
                     <tr>
-                        <th>{{ $item->id_item }}</th>
+                        <th>{{ $item->id }}</th>
+                        <td>{{ $item->nombre }}</td>
                         <td>{{ $item->descripcion }}</td>
+                        <td>{{ $item->precio }}</td>
                         <td>{{ $item->fecha }}</td>
                         {{-- opciones --}}
                         <td class="d-flex justify-content-around">
                             <a href="" class="btn btn-warning" data-bs-toggle="modal"
-                                data-bs-target="#modalEditar{{ $item->id_item }}">
+                                data-bs-target="#modalEditar{{ $item->id }}">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
-                            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmar{{ $item->id_item }}">
+                            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmar{{ $item->id }}">
                                 <i class="fa-solid fa-trash-can"></i>
                             </a>
                         </td>
 
                         <!-- Modal de modificar datos-->
-                        <div class="modal fade" id="modalEditar{{ $item->id_item }}" tabindex="-1"
+                        <div class="modal fade" id="modalEditar{{ $item->id }}" tabindex="-1"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -56,18 +60,27 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="{{ route('crud.update') }}" method="POST">
+                                        <form action="{{ route('crud.update',$item->id) }}" method="POST">
                                             @csrf
                                             <div class="mb-3">
-                                                <label for="inputCodigo" class="form-label">ID</label>
-                                                <input type="number" min="1" class="form-control text-bg-secondary"
-                                                    id="inputCodigo" value="{{ $item->id_item }}" name="txtid"
-                                                    readonly>
+                                                <span>ID</span>
+                                                <br>
+                                                <span class="text-bg-secondary rounded-3 d-block">{{$item->id}}</span>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="inputNombre" class="form-label">Descripción</label>
+                                                <label for="inputNombre" class="form-label">Nombre</label>
                                                 <input type="text" class="form-control" id="inputNombre"
+                                                    value="{{ $item->nombre }}" name="txtnombre">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="inputDescripcion" class="form-label">Descripción</label>
+                                                <input type="text" class="form-control" id="inputDescripcion"
                                                     value="{{ $item->descripcion }}" name="txtdescripcion">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="inputPrecio" class="form-label">Fecha</label>
+                                                <input type="number" class="form-control" id="inputPrecio" value="{{ $item->precio }}"
+                                                    name="txtprecio">
                                             </div>
                                             <div class="mb-3">
                                                 <label for="inputPrecio" class="form-label">Fecha</label>
@@ -86,7 +99,7 @@
                         {{-- alerta de confirmación --}}
                         <div>
                             <!-- Modal de eliminación -->
-                            <div class="modal fade" id="modalConfirmar{{ $item->id_item }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            <div class="modal fade" id="modalConfirmar{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
                                 aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -96,13 +109,13 @@
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            ¿Eliminar el item con ID: {{$item->id_item}}?
+                                            ¿Eliminar el item con ID: {{$item->id}}?
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Cancelar
                                             </button>
-                                            <a href="{{ route('crud.delete', $item->id_item) }}" class="btn btn-danger">Confirmar</a>
+                                            <a href="{{ route('crud.delete', $item->id) }}" class="btn btn-danger">Confirmar</a>
                                         </div>
                                     </div>
                                 </div>
@@ -131,12 +144,20 @@
                         <form action="{{ route('crud.create') }}" method="POST">
                             @csrf
                             <div class="mb-3">
+                                <label for="inputNombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="inputNombre" name="txtnombre">
+                            </div>
+                            <div class="mb-3">
                                 <label for="inputDescripcion" class="form-label">Descripción</label>
                                 <input type="text" class="form-control" id="inputDescripcion" name="txtdescripcion">
                             </div>
                             <div class="mb-3">
-                                <label for="inputFecha" class="form-label">Fecha</label>
-                                <input type="date" class="form-control" id="inputFecha" name="txtfecha">
+                                <label for="inputPrecio" class="form-label">Precio</label>
+                                <input type="number" class="form-control" id="inputPrecio" name="txtprecio">
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputPrecio" class="form-label">Fecha</label>
+                                <input type="date" class="form-control" id="inputPrecio" name="txtfecha">
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Agregar</button>
