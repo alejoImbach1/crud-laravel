@@ -65,7 +65,7 @@
                                             <div class="mb-3">
                                                 <span>ID</span>
                                                 <br>
-                                                <span class="text-bg-secondary rounded-3 d-block">{{$item->id}}</span>
+                                                <span class="text-bg-secondary rounded-3 d-block ps-3 fs-5">{{$item->id}}</span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="inputNombre" class="form-label">Nombre</label>
